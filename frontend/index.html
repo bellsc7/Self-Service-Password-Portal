@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PACIFICA Self Service Password Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit" async defer></script>
+</head>
+<body>
+    <div class="portal-container">
+        <header class="portal-header">
+            <span class="header-icon">🏠</span>
+            <h1>PACIFICA Self Service Password Portal</h1>
+        </header>
+
+        <main id="main-menu" class="portal-main">
+            <p class="instruction-text">To use this service, please select an option below.</p>
+            <div class="portal-grid">
+                <a href="#" id="nav-reset-password" class="portal-button">
+                    <div class="button-icon">🔄</div>
+                    <div class="button-text">
+                        <span>Reset Password</span>
+                        <p>If you have forgotten your password</p>
+                    </div>
+                </a>
+                <a href="#" id="nav-unlock-account" class="portal-button">
+                    <div class="button-icon">🔓</div>
+                    <div class="button-text">
+                        <span>Unlock Account</span>
+                        <p>If your account gets locked</p>
+                    </div>
+                </a>
+                <a href="#" id="nav-enrollment" class="portal-button">
+                    <div class="button-icon">📝</div>
+                    <div class="button-text">
+                        <span>Enrollment</span>
+                        <p>Login to view or update your details</p>
+                    </div>
+                </a>
+                <a href="#" id="nav-user-guide" class="portal-button">
+                    <div class="button-icon">📄</div>
+                    <div class="button-text">
+                        <span>User Guide</span>
+                        <p>If you need help on using portal</p>
+                    </div>
+                </a>
+            </div>
+        </main>
+
+        <div id="forms-container" style="display: none;">
+            <a href="#" class="back-link back-to-menu">❮ Back to Main Menu</a>
+            <div id="message-area" class="message-area"></div>
+            
+            <div id="forgot-password-section" class="form-section">
+                <form id="forgot-form">
+                    <h2>Forgot Password</h2>
+                    <div class="form-group">
+                        <input type="text" id="username-forgot" placeholder="Enter your username" required>
+                    </div>
+                    <div id="recaptcha-forgot" class="form-group g-recaptcha-container"></div>
+                    <button type="submit">Request OTP</button>
+                </form>
+                <form id="reset-form" style="display: none;">
+                    <h2>Reset Password</h2>
+                    <div class="form-group">
+                        <input type="text" id="otp-reset" placeholder="OTP Code" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="new_password" placeholder="New Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="confirm_password" placeholder="Confirm New Password" required>
+                    </div>
+                    <button type="submit">Reset Password</button>
+                </form>
+            </div>
+            
+            <div id="unlock-account-section" class="form-section" style="display: none;">
+                <form id="unlock-request-form">
+                    <h2>Unlock Account</h2>
+                     <div class="form-group">
+                        <input type="text" id="username-unlock" placeholder="Enter your username" required>
+                    </div>
+                    <div id="recaptcha-unlock" class="form-group g-recaptcha-container"></div>
+                    <button type="submit">Request OTP for Unlock</button>
+                </form>
+                <form id="unlock-confirm-form" style="display: none;">
+                    <h2>Confirm Unlock</h2>
+                    <div class="form-group">
+                        <input type="text" id="otp-unlock" placeholder="OTP Code" required>
+                    </div>
+                    <button type="submit">Unlock My Account</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="enrollment-section" style="display: none;">
+             <a href="#" class="back-link back-to-menu">❮ Back to Main Menu</a>
+            <div id="message-area-enroll" class="message-area"></div>
+            
+            <div id="login-view">
+                <form id="login-form">
+                    <h2>Login to Enrollment</h2>
+                    <div class="form-group">
+                        <input type="text" id="username-login" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password-login" placeholder="Password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+            
+            <div id="profile-view" style="display: none;">
+                <h2>Your Profile</h2>
+                <div class="profile-details">
+                    <div class="profile-item">
+                        <span class="profile-item-label">Display Name:</span>
+                        <span id="profile-displayName" class="profile-item-value"></span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-item-label">Office Email:</span>
+                        <span id="profile-email" class="profile-item-value"></span>
+                    </div>
+                    <div class="profile-item">
+                        <span class="profile-item-label">Telephone:</span>
+                        <span id="profile-telephone" class="profile-item-value"></span>
+                    </div>
+                </div>
+                <form id="update-profile-form">
+                    <div class="form-group">
+                        <label for="personal-email">Personal Email (for password recovery)</label>
+                        <input type="email" id="personal-email" placeholder="your.personal@email.com">
+                    </div>
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="user-guide-section" style="display: none;">
+             <a href="#" class="back-link back-to-menu">❮ Back to Main Menu</a>
+             <div class="user-guide-content">
+                <h2>User Guide</h2>
+                <h4>Which menu should I use?</h4>
+                <ul>
+                    <li><b>Reset Password:</b> Use when you forget your current password and cannot log in.</li>
+                    <li><b>Unlock Account:</b> Use when your account is locked after too many incorrect password attempts.</li>
+                    <li><b>Enrollment:</b> Use when you know your password and want to view your details or update your personal recovery email.</li>
+                </ul>
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 2rem 0;">
+                <h4>How to Reset Your Password</h4>
+                <ol>
+                    <li>Click on the <b>Reset Password</b> menu.</li>
+                    <li>Enter your <b>Username</b> and click "Request OTP".</li>
+                    <li>Check your personal/recovery email for a 6-digit OTP.</li>
+                    <li>Enter the OTP and your desired new password on the next screen.</li>
+                    <li>Click confirm, and your password will be changed instantly.</li>
+                </ol>
+             </div>
+        </div>
+        
+       <footer class="site-footer">
+  <p>&copy; 2025 By IT PACIFICA TEAM</p>
+  <p>
+    <span>Email: it@pacifica.co.th</span> |
+    <span>Tel: 080-9701086, 091-7150512</span>
+  </p>
+</footer>
+
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
