@@ -83,6 +83,10 @@ class UserProfile(BaseModel):
     email: Optional[str] = None
     telephone: Optional[str] = None
     personal_email: Optional[str] = None
+    title: Optional[str] = None
+    department: Optional[str] = None
+    company: Optional[str] = None
+    employeeID: Optional[str] = None
 
 class UpdateProfileRequest(BaseModel):
     personal_email: str
@@ -179,24 +183,32 @@ async def read_users_me(current_username: str = Depends(get_current_user)):
     conn = get_ad_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Cannot connect to AD")
-    
+
     AD_SEARCH_BASE = os.getenv("AD_SEARCH_BASE")
     search_filter = f'(sAMAccountName={current_username})'
-    attributes_to_get = ['displayName', 'mail', 'telephoneNumber', 'pager']
+
+    # ▼▼▼ เพิ่ม Attributes ที่ต้องการดึงข้อมูล ▼▼▼
+    attributes_to_get = ['displayName', 'mail', 'telephoneNumber', 'pager', 'title', 'department', 'company', 'employeeID']
     conn.search(search_base=AD_SEARCH_BASE, search_filter=search_filter, attributes=attributes_to_get)
-    
+
     if not conn.entries:
         raise HTTPException(status_code=404, detail="User not found")
-        
+
     user_entry = conn.entries[0]
     conn.unbind()
-    
+
+    # ▼▼▼ เพิ่มการส่งข้อมูลใหม่กลับไป ▼▼▼
     return UserProfile(
         displayName=user_entry.displayName.value if 'displayName' in user_entry else None,
         email=user_entry.mail.value if 'mail' in user_entry else None,
         telephone=user_entry.telephoneNumber.value if 'telephoneNumber' in user_entry else None,
         personal_email=user_entry.pager.value if 'pager' in user_entry else None,
+        title=user_entry.title.value if 'title' in user_entry else None,
+        department=user_entry.department.value if 'department' in user_entry else None,
+        company=user_entry.company.value if 'company' in user_entry else None,
+        employeeID=user_entry.employeeID.value if 'employeeID' in user_entry else None
     )
+
 
 @app.put("/api/user/me")
 async def update_users_me(profile_update: UpdateProfileRequest, current_username: str = Depends(get_current_user), request: Request = None):

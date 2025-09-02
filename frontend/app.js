@@ -264,30 +264,38 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     async function fetchAndDisplayProfile() {
-        const token = localStorage.getItem('userToken');
-        if (!token) return;
-        showEnrollMessage('Loading profile...', 'info');
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/user/me`, {
-                method: 'GET',
-                headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.detail);
+    const token = localStorage.getItem('userToken');
+    if (!token) return;
+    showEnrollMessage('Loading profile...', 'info');
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/user/me`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.detail);
 
-            document.getElementById('profile-displayName').textContent = data.displayName || 'N/A';
-            document.getElementById('profile-email').textContent = data.email || 'N/A';
-            document.getElementById('profile-telephone').textContent = data.telephone || 'N/A';
-            document.getElementById('personal-email').value = data.personal_email || '';
+        // Populate profile fields
+        document.getElementById('profile-displayName').textContent = data.displayName || 'N/A';
+        document.getElementById('profile-email').textContent = data.email || 'N/A';
+        document.getElementById('profile-telephone').textContent = data.telephone || 'N/A';
+        document.getElementById('personal-email').value = data.personal_email || '';
 
-            loginForm.style.display = 'none';
-            profileView.style.display = 'block';
-            showEnrollMessage('Profile loaded successfully.', 'success');
-        } catch (error) {
-            showEnrollMessage(`Error loading profile: ${error.message}`, 'error');
-            localStorage.removeItem('userToken');
-        }
+        // ▼▼▼ เพิ่ม 4 บรรทัดนี้ ▼▼▼
+        document.getElementById('profile-title').textContent = data.title || 'N/A';
+        document.getElementById('profile-department').textContent = data.department || 'N/A';
+        document.getElementById('profile-company').textContent = data.company || 'N/A';
+        document.getElementById('profile-employeeID').textContent = data.employeeID || 'N/A';
+
+        // Show profile view
+        loginForm.style.display = 'none';
+        profileView.style.display = 'block';
+        showEnrollMessage('Profile loaded successfully.', 'success');
+    } catch (error) {
+        showEnrollMessage(`Error loading profile: ${error.message}`, 'error');
+        localStorage.removeItem('userToken');
     }
+}
 
     updateProfileForm.addEventListener('submit', async (e) => {
         e.preventDefault();
